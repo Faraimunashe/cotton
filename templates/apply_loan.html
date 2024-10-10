@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="pagetitle">
+    <h1>Loan Application Form</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">Application</li>
+        </ol>
+    </nav>
+</div>
+<section class="section dashboard">
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% if "error" in messages[0] %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        {{messages[0]}}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        {{messages[0]}}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+    <form class="row g-3 needs-validation" id='myForm' method="POST" action="{{ url_for('apply_loan') }}">
+        {{ form.hidden_tag() }}
+        <div class="col-12">
+            <label class="form-label">Account Number</label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="col-12">
+            {{ form.gender.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.gender(class="form-control") }}
+                {% for error in form.gender.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.married.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.married(class="form-control") }}
+                {% for error in form.married.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.dependents.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.dependents(class="form-control") }}
+                {% for error in form.dependents.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.education.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.education(class="form-control") }}
+                {% for error in form.education.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+                <div class="invalid-feedback">Please enter your debt to income ratio.</div>
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.self_employed.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.self_employed(class="form-control") }}
+                {% for error in form.self_employed.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.application_income.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.application_income(class="form-control") }}
+                {% for error in form.application_income.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            {{ form.coapplication_income.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.coapplication_income(class="form-control") }}
+                {% for error in form.coapplication_income.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            {{ form.loan_amount.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.loan_amount(class="form-control") }}
+                {% for error in form.loan_amount.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            {{ form.loan_amount_term.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.loan_amount_term(class="form-control") }}
+                {% for error in form.loan_amount_term.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            {{ form.credit_history.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.credit_history(class="form-control") }}
+                {% for error in form.credit_history.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            {{ form.property_area.label(class="form-label") }}
+            <div class="input-group has-validation">
+                {{ form.property_area(class="form-control") }}
+                {% for error in form.property_area.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="col-12">
+            <button class="btn btn-primary w-100" id="submit-btn" type="submit">Apply Loan</button>
+        </div>
+    </form>  
+</section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "guest.html" %}
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Register Your Account</h5>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% if "error" in messages[0] %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        {{messages[0]}}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        {{messages[0]}}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+
+        <form class="row g-3 needs-validation" method="POST" action="/register" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="col-12">
+                {{ form.name.label(class="form-label")}}
+                <div class="input-group has-validation">
+                    {{ form.name(class="form-control") }}
+                    {% for error in form.name.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <div class="invalid-feedback">Please enter your username.</div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                {{ form.email.label(class="form-label")}}
+                <div class="input-group has-validation">
+                    {{ form.email(class="form-control") }}
+                    {% for error in form.email.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <div class="invalid-feedback">Please enter your email.</div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                {{ form.password.label(class="form-label")}}
+                <div class="input-group has-validation">
+                    {{ form.password(class="form-control") }}
+                    {% for error in form.password.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <div class="invalid-feedback">Please enter your password.</div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                {{ form.confirm_password.label(class="form-label")}}
+                <div class="input-group has-validation">
+                    {{ form.confirm_password(class="form-control") }}
+                    {% for error in form.confirm_password.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    <div class="invalid-feedback">Please enter your password confirmation.</div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Register</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Already have account? <a href="/login">Login account</a></p>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
