@@ -17,36 +17,85 @@ class User(UserMixin, db.Model):
         self.password=password
         self.name=name
         self.role=role
+        
+    
+        
 
-class LoanApplication(db.Model):
+class Farmer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    firstnames = db.Column(db.String(20), nullable=False)
+    surname = db.Column(db.String(20), nullable=False)
     gender = db.Column(db.String(20), nullable=False)
-    married = db.Column(db.String(20), nullable=False)
-    dependents = db.Column(db.String(20), nullable=False)
-    education = db.Column(db.String(20), nullable=False)
-    self_employed = db.Column(db.String(20), nullable=False)
-    application_income = db.Column(db.String(20), nullable=False)
-    coapplication_income = db.Column(db.String(20), nullable=False)
-    loan_amount = db.Column(db.String(20), nullable=False)
-    loan_amount_term = db.Column(db.String(20), nullable=False)
-    credit_history = db.Column(db.String(20), nullable=False)
-    property_area = db.Column(db.String(20), nullable=False)
-    status = db.Column(db.String(20), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    address = db.Column(db.String(20), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
 
-    def __init__(self, user_id, gender, married, dependents, education, self_employed, application_income, coapplication_income, loan_amount, loan_amount_term, credit_history, property_area, status, created_at):
-        self.user_id = user_id
-        self.gender = gender
-        self.married = married
-        self.dependents = dependents
-        self.education = education
-        self.self_employed = self_employed
-        self.application_income=application_income
-        self.coapplication_income=application_income
-        self.loan_amount = loan_amount
-        self.loan_amount_term = loan_amount_term
-        self.credit_history = credit_history
-        self.property_area = property_area
-        self.status = status
+    def __init__(self, firstnames, surname, gender, phone, address, created_at):
+        self.firstnames=firstnames
+        self.surname=surname
+        self.gender=gender
+        self.phone=phone
+        self.address=address
+        self.created_at = created_at
+
+    @property
+    def full_name(self):
+        return f"{self.firstnames} {self.surname}"
+
+
+class Season(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    start_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+    end_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+
+    def __init__(self, name, start_date, end_date):
+        self.name=name
+        self.start_date = start_date
+        self.end_date = end_date
+
+
+
+class Record(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    farmer_id = db.Column(db.Integer, nullable=False)
+    season_id = db.Column(db.Integer, nullable=False)
+    stage = db.Column(db.String(80), nullable=False)
+    size = db.Column(db.String(80), nullable=False)
+    qty = db.Column(db.Integer, nullable=True)
+    name = db.Column(db.String(80), nullable=True)
+    date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+
+    def __init__(self, user_id, farmer_id, season_id, stage, size, qty, name, date, created_at):
+        self.user_id=user_id
+        self.farmer_id=farmer_id
+        self.season_id=season_id
+        self.stage=stage
+        self.size=size
+        self.qty=qty
+        self.name=name
+        self.date=date
+        self.created_at = created_at
+        
+class Sale(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    farmer_id = db.Column(db.Integer, nullable=False)
+    season_id = db.Column(db.Integer, nullable=False)
+    qty = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Numeric(precision=10, scale=2))
+    total_price = db.Column(db.Numeric(precision=10, scale=2))
+    date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+
+    def __init__(self, user_id, farmer_id, season_id, qty, unit_price, total_price, date, created_at):
+        self.user_id=user_id
+        self.farmer_id=farmer_id
+        self.season_id=season_id
+        self.qty=qty
+        self.unit_price=unit_price
+        self.total_price=total_price
+        self.date=date
         self.created_at = created_at

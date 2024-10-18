@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .message {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+        display: none;
+    }
+    .message.success {
+        background-color: #dff0d8;
+        color: #3c763d;
+    }
+    .message.error {
+        background-color: #f2dede;
+        color: #a94442;
+    }
+    /* Loading spinner style */
+    #loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .loader {
+        border: 4px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 4px solid #4CAF50;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="container">
+    <h2>Fraud Detection Checker</h2>
+    <form id="fraudForm">
+        <div class="form-group">
+            <label for="farmerId">Farmer ID:</label>
+            <select id="farmerId" name="farmer_id" class="form-select" required>
+                <option selected disabled>Select Farmer</option>
+                {% for fm in farmers %}
+                    <option value="{{fm.id}}">{{ fm.firstnames }} {{ fm.surname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="seasonId">Season ID:</label>
+            <select id="seasonId" name="season_id" class="form-select" required>
+                <option selected disabled>Select Season</option>
+                {% for sn in seasons %}
+                    <option value="{{sn.id}}">{{ sn.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Check Fraud</button>
+    </form>
+    
+    <!-- Loading spinner -->
+    <div id="loading">
+        <div class="loader"></div>
+    </div>
+    
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+    // Add an event listener for form submission
+    document.getElementById('fraudForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        // Show the loading spinner
+        document.getElementById('loading').style.display = 'block';
+
+        // Get form values
+        const farmerId = document.getElementById('farmerId').value;
+        const seasonId = document.getElementById('seasonId').value;
+
+        // Prepare the data to send
+        const data = {
+            farmer_id: farmerId,
+            season_id: seasonId
+        };
+
+        // Send a POST request to the server using Fetch API
+        fetch('/check-fraud', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Hide the loading spinner
+            document.getElementById('loading').style.display = 'none';
+
+            // Display the result message
+            const messageDiv = document.getElementById('message');
+            if (result.fraud) {
+                messageDiv.textContent = result.message;
+                messageDiv.className = 'message error'; // Apply error styles
+            } else {
+                messageDiv.textContent = result.message;
+                messageDiv.className = 'message success'; // Apply success styles
+            }
+            messageDiv.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+
+            // Hide the loading spinner
+            document.getElementById('loading').style.display = 'none';
+
+            // Show error message
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = 'An error occurred while checking for fraud.';
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+        });
+    });
+</script>
+
+{% endblock %}

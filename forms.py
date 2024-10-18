@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, IntegerField, SelectField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, NumberRange
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, IntegerField, SelectField, DateField, DateTimeField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, NumberRange, Regexp, Optional
+from wtforms_sqlalchemy.fields import QuerySelectField
+from models import User, Farmer, Season 
+import datetime
 
 
 class LoginForm(FlaskForm):
@@ -15,27 +18,59 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
+    
+
+class UserForm(FlaskForm):
+    role_choices = [(2, 'Field Officer'),
+               (1, 'Admin')]
+    role = SelectField('Select Role', choices=role_choices, validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired(), Length(min=4, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
      
 
+class SeasonForm(FlaskForm):
+    name = StringField('Season Name', validators=[DataRequired()])
+    start_date = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
+    end_date = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
-class LoanForm(FlaskForm):
-    edu_choices = [('Not Graduate', 'Not Graduate'),('Graduate', 'Graduate')]
-    gender_choices = [('Male', 'Male'),('Female', 'Female')]
-    married_choices = [('Yes', 'Yes'),('No', 'No')]
-    employment_choices = [('Yes', 'Yes'),('No', 'No')]
-    credit_choices = [(0, '0'),(1, '1')]
-    property_choices = [('Rural', 'Rural'),('Semiurban', 'Semiurban'),('Urban', 'Urban')]
+
+zimbabwe_phone_regex = r'^07\d{8}$'
+
+class FarmerForm(FlaskForm):
+    firstnames = StringField('First Names', validators=[DataRequired()])
+    surname = StringField('Surname', validators=[DataRequired()])
+    gender = SelectField('Gender', choices=[('Male', 'Male'), ('Female', 'Female')], validators=[DataRequired()])
+    phone = StringField('Phone Number (without country code)', validators=[
+        DataRequired(), 
+        Regexp(zimbabwe_phone_regex, message="Phone number must be a valid Zimbabwe mobile number")
+    ])
+    address = StringField('Address', validators=[DataRequired()])
     
-    gender = SelectField('Gender', choices=gender_choices)
-    married = SelectField('Married', choices=married_choices)
-    dependents = DecimalField('Dependents', validators=[DataRequired(), NumberRange(min=1, max=10)])
-    education = SelectField('Education', choices=edu_choices)
-    self_employed = SelectField('Self Employeed', choices=employment_choices)
-    application_income = DecimalField('Application Income', validators=[DataRequired(), NumberRange(min=0.01)])
-    coapplication_income = DecimalField('Coapplication Income', validators=[DataRequired(), NumberRange(min=0.01)])
-    loan_amount = DecimalField('Loan Amount', validators=[DataRequired(), NumberRange(min=0.01)])
-    loan_amount_term = DecimalField('Loan Amount Term', validators=[DataRequired(), NumberRange(min=1)])
-    credit_history = SelectField('Credit History', choices=credit_choices)
-    property_area = SelectField('Property Area', choices=property_choices)
+    submit = SubmitField('Submit')     
+
+class RecordForm(FlaskForm):
+    stage_choices = [('PLANTING', 'PLANTING'),
+               ('FERTILATION', 'FERTILIZATION'),
+               ('PEST CONTROL', 'PEST CONTROL'),
+               ('HARVEST', 'HARVEST')]
+    farmer_id = QuerySelectField('Select Farmer', query_factory=lambda: Farmer.query.all(), get_label="full_name", allow_blank=False, validators=[DataRequired()])
+    season_id = QuerySelectField('Select Season', query_factory=lambda: Season.query.all(), get_label="name", allow_blank=False, validators=[DataRequired()])
+    stage = SelectField('Select Farming Stage', choices=stage_choices, validators=[DataRequired(), Length(max=80)])
+    size = StringField('Field Size', validators=[DataRequired(), Length(max=80)])
+    qty = IntegerField('Quantity (kgs/litres) (optinal)', validators=[Optional()])
+    name = StringField('Name (chemicals/fertilizers) (optinal)', validators=[Optional(), Length(max=80)])
     
-    submit = SubmitField('Apply Loan')
+    submit = SubmitField('Save Record')
+    
+    
+class SaleForm(FlaskForm):
+    farmer_id = QuerySelectField('Select Farmer', query_factory=lambda: Farmer.query.all(), get_label="full_name", allow_blank=False, validators=[DataRequired()])
+    season_id = QuerySelectField('Select Season', query_factory=lambda: Season.query.all(), get_label="name", allow_blank=False, validators=[DataRequired()])
+    qty = IntegerField('Quantity (KGs)', validators=[DataRequired()])
+    unit_price = DecimalField('Unit Price', places=2, validators=[DataRequired()])
+    
+    submit = SubmitField('Save Sale')

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="pagetitle">
-    <h1>Users</h1>
+    <h1>Seasons</h1>
       <nav>
           <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">Seasons</li>
           </ol>
       </nav>
   </div>
@@ -28,7 +28,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body table-responsive">
-                    <h5 class="card-title">Users</h5>
+                    <h5 class="card-title">Seasons</h5>
                     <button type="button" style="float: right;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">
                         Add New
                     </button>
@@ -36,25 +36,19 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in users %}
+                            {% for sn in seasons %}
                                 <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>
-                                        {% if user.role == 1 %}
-                                            Admin
-                                        {% else %}
-                                            Officer
-                                        {% endif %}
-                                    </td>
+                                    <td>{{ sn.id }}</td>
+                                    <td>{{ sn.name }}</td>
+                                    <td>{{ sn.start_date }}</td>
+                                    <td>{{ sn.end_date }}</td>
                                     <td>
                                         <button type="button" class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-pencil-square"></i>
@@ -76,26 +70,13 @@
 <div class="modal fade" id="addCategory" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{url_for('users')}}" method="POST">
+            <form action="{{url_for('seasons')}}" method="POST">
                 {{ form.hidden_tag() }}
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New User</h5>
+                    <h5 class="modal-title">Add New Season</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            {{ form.role.label(class="form-label") }}
-                            {{ form.role(id="inputText", class="form-control") }}
-                            {% if form.role.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.role.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
                     <div class="row mb-3">
                         <div class="col-12">
                             {{ form.name.label(class="form-label") }}
@@ -111,11 +92,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(id="inputText", class="form-control") }}
-                            {% if form.email.errors %}
+                            {{ form.start_date.label(class="form-label") }}
+                            {{ form.start_date(id="inputText", class="form-control") }}
+                            {% if form.start_date.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.email.errors %}
+                                    {% for error in form.start_date.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -124,24 +105,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(id="inputText", class="form-control") }}
-                            {% if form.password.errors %}
+                            {{ form.end_date.label(class="form-label") }}
+                            {{ form.end_date(id="inputText", class="form-control") }}
+                            {% if form.end_date.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            {{ form.confirm_password.label(class="form-label") }}
-                            {{ form.confirm_password(id="inputText", class="form-control") }}
-                            {% if form.confirm_password.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.confirm_password.errors %}
+                                    {% for error in form.end_date.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="pagetitle">
-    <h1>Users</h1>
+    <h1>Cotton Sales</h1>
       <nav>
           <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">Sales</li>
           </ol>
       </nav>
   </div>
@@ -28,7 +28,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body table-responsive">
-                    <h5 class="card-title">Users</h5>
+                    <h5 class="card-title">Cotton Sales</h5>
                     <button type="button" style="float: right;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">
                         Add New
                     </button>
@@ -36,33 +36,24 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th></th>
+                                <th>Season</th>
+                                <th>Farmer</th>
+                                <th>Qty (KGs)</th>
+                                <th>Price/KG</th>
+                                <th>Total</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in users %}
+                            {% for sl in sales %}
                                 <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>
-                                        {% if user.role == 1 %}
-                                            Admin
-                                        {% else %}
-                                            Officer
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </td>
+                                    <td>{{ sl.id }}</td>
+                                    <td>{{ sl.name }}</td>
+                                    <td>{{ sl.firstnames }} {{ sl.surname }}</td>
+                                    <td>{{ sl.qty }}</td>
+                                    <td>${{ sl.unit_price }}</td>
+                                    <td>${{ sl.total_price }}</td>
+                                    <td>{{ sl.date }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -76,20 +67,20 @@
 <div class="modal fade" id="addCategory" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{url_for('users')}}" method="POST">
+            <form action="{{url_for('sales')}}" method="POST">
                 {{ form.hidden_tag() }}
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New User</h5>
+                    <h5 class="modal-title">Add New Sale</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.role.label(class="form-label") }}
-                            {{ form.role(id="inputText", class="form-control") }}
-                            {% if form.role.errors %}
+                            {{ form.farmer_id.label(class="form-label") }}
+                            {{ form.farmer_id(id="inputText", class="form-select") }}
+                            {% if form.farmer_id.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.role.errors %}
+                                    {% for error in form.farmer_id.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -98,11 +89,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.name.label(class="form-label") }}
-                            {{ form.name(id="inputText", class="form-control") }}
-                            {% if form.name.errors %}
+                            {{ form.season_id.label(class="form-label") }}
+                            {{ form.season_id(id="inputText", class="form-select") }}
+                            {% if form.season_id.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.name.errors %}
+                                    {% for error in form.season_id.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -111,11 +102,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(id="inputText", class="form-control") }}
-                            {% if form.email.errors %}
+                            {{ form.qty.label(class="form-label") }}
+                            {{ form.qty(id="inputText", class="form-control") }}
+                            {% if form.qty.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.email.errors %}
+                                    {% for error in form.qty.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -124,24 +115,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(id="inputText", class="form-control") }}
-                            {% if form.password.errors %}
+                            {{ form.unit_price.label(class="form-label") }}
+                            {{ form.unit_price(id="inputText", class="form-control") }}
+                            {% if form.unit_price.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            {{ form.confirm_password.label(class="form-label") }}
-                            {{ form.confirm_password(id="inputText", class="form-control") }}
-                            {% if form.confirm_password.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.confirm_password.errors %}
+                                    {% for error in form.unit_price.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>

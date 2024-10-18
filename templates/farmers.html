@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="pagetitle">
-    <h1>Users</h1>
+    <h1>Farmers</h1>
       <nav>
           <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">Farmers</li>
           </ol>
       </nav>
   </div>
@@ -28,7 +28,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body table-responsive">
-                    <h5 class="card-title">Users</h5>
+                    <h5 class="card-title">Farmers</h5>
                     <button type="button" style="float: right;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">
                         Add New
                     </button>
@@ -36,25 +36,21 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
+                                <th>Fullname</th>
+                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th>Address</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in users %}
+                            {% for fm in farmers %}
                                 <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>
-                                        {% if user.role == 1 %}
-                                            Admin
-                                        {% else %}
-                                            Officer
-                                        {% endif %}
-                                    </td>
+                                    <td>{{ fm.id }}</td>
+                                    <td>{{ fm.firstnames }} {{ fm.surname }}</td>
+                                    <td>{{ fm.gender }}</td>
+                                    <td>{{ fm.phone }}</td>
+                                    <td>{{ fm.address }}</td>
                                     <td>
                                         <button type="button" class="btn btn-outline-primary btn-sm">
                                             <i class="bi bi-pencil-square"></i>
@@ -76,20 +72,20 @@
 <div class="modal fade" id="addCategory" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{url_for('users')}}" method="POST">
+            <form action="{{url_for('farmers')}}" method="POST">
                 {{ form.hidden_tag() }}
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New User</h5>
+                    <h5 class="modal-title">Add New Farmer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.role.label(class="form-label") }}
-                            {{ form.role(id="inputText", class="form-control") }}
-                            {% if form.role.errors %}
+                            {{ form.firstnames.label(class="form-label") }}
+                            {{ form.firstnames(id="inputText", class="form-control") }}
+                            {% if form.firstnames.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.role.errors %}
+                                    {% for error in form.firstnames.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -98,11 +94,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.name.label(class="form-label") }}
-                            {{ form.name(id="inputText", class="form-control") }}
-                            {% if form.name.errors %}
+                            {{ form.surname.label(class="form-label") }}
+                            {{ form.surname(id="inputText", class="form-control") }}
+                            {% if form.surname.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.name.errors %}
+                                    {% for error in form.surname.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -111,11 +107,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(id="inputText", class="form-control") }}
-                            {% if form.email.errors %}
+                            {{ form.gender.label(class="form-label") }}
+                            {{ form.gender(id="inputText", class="form-control") }}
+                            {% if form.gender.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.email.errors %}
+                                    {% for error in form.gender.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -124,11 +120,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(id="inputText", class="form-control") }}
-                            {% if form.password.errors %}
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(id="inputText", class="form-control") }}
+                            {% if form.phone.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
+                                    {% for error in form.phone.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
@@ -137,11 +133,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-12">
-                            {{ form.confirm_password.label(class="form-label") }}
-                            {{ form.confirm_password(id="inputText", class="form-control") }}
-                            {% if form.confirm_password.errors %}
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(id="inputText", class="form-control") }}
+                            {% if form.address.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in form.confirm_password.errors %}
+                                    {% for error in form.address.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
